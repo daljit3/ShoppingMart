@@ -1,0 +1,31 @@
+{% extends "main_layout.html" %}
+
+{% load django_bootstrap5 %}
+
+<!-- Page title -->
+{% block metaTitle %}Dashboard{% endblock%}
+
+<!-- main content -->
+{% block bodyContent %}
+
+<div class="container">
+    <a href="{% url 'dashboard' %}">Go back</a>
+    <div class="row mt-3">`
+        <div class="col-4">
+            <div class="card">
+                <h5 class="card-header">Add Item</h5>
+                <div class="card-body">
+                    <form action="" method="post">
+                        {% csrf_token %}
+
+                        {% bootstrap_form form %}
+                        {% bootstrap_form_errors form %}
+                        <button type="submit" class="btn btn-success">Update</button>
+                    </form>
+                </div> <!-- /.card-body -->
+            </div> <!-- /.card -->
+        </div>
+    </div>
+</div>
+
+{% endblock %}
