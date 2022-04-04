@@ -1,0 +1,30 @@
+{% extends "main_layout.html" %}
+
+<!-- Page title -->
+{% block metaTitle %}Home{% endblock%}
+
+<!-- main content -->
+{% block bodyContent %}
+<div class="container">
+    <div class="card mt-5">
+        <div class="card-header">
+          Your shopping list:
+        </div>
+        <div class="card-body">
+
+          <h5 class="card-title">Welcome to our website!</h5>
+          
+          {% if not request.user.is_authenticated %}
+            <p class="card-text">Please sign up or sign in if you already have an account.</p>
+            <a href="/sign-in" class="btn btn-success">Sign In</a>
+            <a href="/sign-up" class="btn btn-primary">Sign Up</a>
+          {% else %}
+            <br />
+            <a href="{% url 'dashboard' %}" class="btn btn-success">Go to your dashboard</a>
+          {% endif %}
+        </div>
+      </div>
+</div>
+
+
+{% endblock %}

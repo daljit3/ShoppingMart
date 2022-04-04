@@ -1,0 +1,122 @@
+{% extends "main_layout.html" %}
+
+{% load django_bootstrap5 %}
+
+<!-- Page title -->
+{% block metaTitle %}Dashboard{% endblock%}
+
+<!-- main content -->
+{% block bodyContent %}
+<style>
+    tr.archived td {
+        text-decoration:line-through;
+        color: #ccc;
+    }
+    tr.archived td a {
+      text-decoration:none;
+      color: #ccc;
+    }
+</style>
+
+<div class="container">
+  <div class="d-flex justify-content-between mt-3">
+    <div>
+      &nbsp;
+    </div>
+    <div>
+      <form action="" method="post">
+        {% csrf_token %}
+        {% bootstrap_form_errors form %}
+        <div class="input-group">
+          {% bootstrap_field form.name show_label=False placeholder="Name of new list" addon_after='<button class="btn btn-warning" type="submit" id="save_button">Create</button>' %}
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card mt-2">
+    <div class="card-header">
+        Your shopping list: <span class="badge bg-warning text-dark">{{ user_lists.count }}</span>
+    </div>
+    <div class="card-body">
+      <!-- <h5 class="card-title">Your lists: </h5> 
+      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+      -->      
+
+      <table class="table table-borderless table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Items</th>
+            <th scope="col">Archived?</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for user_list in user_lists %}
+            <tr id="tr_{{ user_list.id }}" {% if user_list.archived %} class="archived" {% endif %}>
+              <td>
+                <a href="{% url 'list_items' user_list.id %}">{{ user_list.name }}</a>
+              </td>
+              <td>
+                {{ user_list.num_of_items }}
+              </td>
+              <td>
+               <div class="form-check">
+                   <input type="checkbox" name="archived" class="form-check-input archive_list" {% if user_list.archived %}checked{% endif %} data-url="{% url 'archive_list' user_list.id %}" data-listid="{{ user_list.id }}" />
+               </div>
+              </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3">You haven't created any lists yet.</td></tr>
+        {% endfor %}
+        </tbody>
+        </table>
+
+
+      </div>
+  </div>
+</div>
+
+<script>
+  $(function() {
+    $(".archive_list").on('click',function() {
+        var sure = confirm("Are you sure?");
+        if(sure) {
+            url = $(this).data("url");
+            listid = $(this).data("listid");
+            checked = $(this).is(":checked");
+            // Send an Ajax request
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    archived: checked
+                },
+                // handle a successful response
+                success: function(json) {
+                    if(json.success == true) {
+                        $tr = $('#tr_'+listid);
+                        if(checked == true) {
+                            $tr.addClass('archived')
+                        } else {
+                            $tr.removeClass('archived')
+                        }
+                    }
+                    //console.log(json); // log the returned json to the console
+                },
+                // handle a non-successful response
+                error : function(xhr,errmsg,err) {
+                    alert("Sorry but there was an error: "+errmsg);
+                    //$('#results').html("<div class='alert-box alert radius' data-alert>"+errmsg+</div>"); // add the error to the dom
+                    console.log(xhr.status + ": " + xhr.responseText); // add info about the error to the console
+                }
+            });
+        }
+        return sure;
+    });
+    });
+  </script>
+
+{% endblock %}

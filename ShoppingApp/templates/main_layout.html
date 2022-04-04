@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block metaTitle %} {% endblock %}</title>
+
+    {# Load the tag library #}
+    {% load django_bootstrap5 %}
+    
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    {% block metaHeadContent %}{% endblock %}
+  </head>
+  <body>
+    <nav class="navbar {% if not request.user.is_authenticated %} navbar-expand-lg {% endif %} navbar-light bg-info">
+      <a class="navbar-brand" href="/">Shopping App</a>
+
+      {% if not request.user.is_authenticated %}
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav">
+              <li class="nav-item {% if request.GET.next == '/sign-in/' %} active {% endif %}">
+                  <a class="nav-link active" aria-current="page" href="/sign-in">Customer</a>
+              </li>
+          </ul>
+      </div>
+      
+      {% else %}
+
+      <form action="" class="form-inline">
+          <span class="mr-4">{{ request.user.get_full_name|title }}</span>
+          <a href="/sign-out" class="btn btn-danger">Sign Out</a>
+      </form>
+
+      {% endif %} 
+  </nav>
+
+    {% if messages %}
+      <div class="container p-0 mt-2">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Page Content-->
+    {% block bodyContent %}{% endblock %}
+
+  </body>
+</html>
