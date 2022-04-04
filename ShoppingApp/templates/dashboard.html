@@ -16,6 +16,12 @@
       text-decoration:none;
       color: #ccc;
     }
+    td a {
+      text-decoration:none;
+    }
+    td.items_num {
+      font-weight:bold; font-size:22px;
+    }
 </style>
 
 <div class="container">
@@ -26,9 +32,9 @@
     <div>
       <form action="" method="post">
         {% csrf_token %}
-        {% bootstrap_form_errors form %}
+        {% bootstrap_form_errors form_list_item %}
         <div class="input-group">
-          {% bootstrap_field form.name show_label=False placeholder="Name of new list" addon_after='<button class="btn btn-warning" type="submit" id="save_button">Create</button>' %}
+          {% bootstrap_field form_list_item.name show_label=False placeholder="Name of new list" addon_after='<button class="btn btn-warning" type="submit" id="save_button">Create</button>' %}
 
         </div>
       </form>
@@ -58,8 +64,8 @@
               <td>
                 <a href="{% url 'list_items' user_list.id %}">{{ user_list.name }}</a>
               </td>
-              <td>
-                {{ user_list.num_of_items }}
+              <td class="items_num">
+                 {{ user_list.num_of_items }} &nbsp; <a style="font-size:12px;" href="{% url 'list_items' user_list.id %}">Add/View</a>
               </td>
               <td>
                <div class="form-check">

@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e1dc096f-55be-4e10-98db-22e52ee951ff" name="Default Changelist" comment="" />
+    <list default="true" id="e1dc096f-55be-4e10-98db-22e52ee951ff" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/ShoppingApp/templates/partials/user_nav.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ShoppingApp/templates/shopping_item_category_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ShoppingApp/templates/shopping_item_category_edit.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ShoppingApp/templates/shopping_list_item_categories.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ShoppingApp/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/ShoppingApp/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ShoppingApp/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/ShoppingApp/templates/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ShoppingApp/templates/shopping_item_edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/ShoppingApp/templates/shopping_item_edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ShoppingApp/templates/shopping_list_items.html" beforeDir="false" afterPath="$PROJECT_DIR$/ShoppingApp/templates/shopping_list_items.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ShoppingApp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ShoppingApp/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ShoppingMart/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ShoppingMart/urls.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,5 +71,16 @@
       <updated>1648996433776</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

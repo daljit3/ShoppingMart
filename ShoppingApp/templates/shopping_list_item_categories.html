@@ -3,65 +3,35 @@
 {% load django_bootstrap5 %}
 
 <!-- Page title -->
-{% block metaTitle %}Dashboard{% endblock%}
+{% block metaTitle %}Manage Categories{% endblock%}
 
 <!-- main content -->
 {% block bodyContent %}
 <style>
-    tr.completed td {
-        text-decoration:line-through;
-        color: #ccc;
-    }
-    tr.completed td span.badge {
-        background-color: #ccc !important;
-    }
-    a.delete_item { color:red; }
-    a.edit_item { color:green; }
+    a.delete_category { color:red; }
+    a.edit_category { color:green; }
 </style>
 <div class="container">
-    <a href="{% url 'dashboard' %}">Go back</a>
+    {% include 'partials/user_nav.html' %}
     <div class="row mt-3">
       <div class="col-8">
         <div class="card">
-            <h5 class="card-header">{{ shopping_list.name }}</h5>
+            <h5 class="card-header">Manage categories</h5>
             <div class="card-body">
                 <table class="table table-borderless table-striped">
                     <thead>
                       <tr>
-                        <th scope="col">Item</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col" style="width:100px">Completed?</th>
+                        <th scope="col">Name</th>
                         <th scope="col" style="width:100px">Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                    {% for list_item in list_items %}
-                        <tr id="tr_{{ list_item.id }}" {% if list_item.completed %} class="completed" {% endif %}>
-                          <td>{{ list_item.name }}
-                              {% if list_item.category %}
-                                    <div class="mt-2"><span class="badge bg-warning text-dark">{{ list_item.category }}</span></div>
-                              {% endif %}
-
-                              {% comment "Ignore this section" %}
-                                  {% if list_item.category_as_list|length %}
-                                    <div class="mt-2">
-                                        {% for single_category in list_item.category_as_list %}
-                                        <span class="badge bg-warning text-dark">{{ single_category }}</span>
-                                        {% endfor %}
-                                    </div>
-                                  {% endif %}
-                              {% endcomment %}
-
-                          </td>
-                          <td>{{ list_item.quantity }}</td>
+                    {% for category in object_list %}
+                        <tr id="tr_{{ category.id }}">
+                          <td>{{ category.name }}</td>
                             <td>
-                             <div class="form-check">
-                                 <input type="checkbox" name="completed" class="form-check-input complete_item" {% if list_item.completed %}checked{% endif %} data-url="{% url 'complete_item' shopping_list.id list_item.id %}" data-itemid="{{ list_item.id }}" />
-                             </div>
-                            </td>
-                            <td>
-                                <a href="{% url 'edit_item' shopping_list.id list_item.id %}" title="Edit item" class="edit_item"><i class="fas fa-edit"></i></a> &nbsp;
-                                <a href="#" title="Delete item" class="delete_item" data-url="{% url 'delete_item' list_item.id %}" data-itemid="{{ list_item.id }}"><i class="fas fa-trash"></i></a>
+                                <a href="{% url 'edit_category' category.id %}" title="Edit Category" class="edit_category"><i class="fas fa-edit"></i></a> &nbsp;
+                                <a href="{% url 'delete_category' category.id %}" title="Delete item" class="delete_category"><i class="fas fa-trash"></i></a>
                             </td>
 
                         </tr>
@@ -74,38 +44,12 @@
         </div>
     </div>
     <div class="col-4">
-        <div class="card">
-            <h5 class="card-header">Add Item</h5>
-            <div class="card-body">
-                <form action="" method="post">
-                    {% csrf_token %}
-
-                    {% bootstrap_form form_list_item %}
-                    {% bootstrap_form_errors form_list_item %}
-
-                    <button type="submit" class="btn btn-success">Add</button>
-
-                </form>
-            </div> <!-- /.card-body -->
-        </div> <!-- /.card -->
 
         <div class="card mt-3">
             <div class="card-header">
-                <div class="d-flex justify-content-between">
                     <h5>Add Category</h5>
-                    <div><a href="{% url 'categories' %}">Manage Categories</a> </div>
-                </div>
             </div>
             <div class="card-body">
-                <form action="{% url 'save_item_category' shopping_list.id %}" method="post">
-                    {% csrf_token %}
-
-                    {% bootstrap_form form_category %}
-                    {% bootstrap_form_errors form_category %}
-
-                    <button type="submit" class="btn btn-success">Add</button>
-
-                </form>
             </div> <!-- /.card-body -->
         </div> <!-- /.card -->
 

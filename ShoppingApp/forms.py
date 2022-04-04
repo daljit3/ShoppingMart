@@ -21,11 +21,15 @@ class SignUpForm(UserCreationForm):
             raise ValidationError("This email address already exists!")
         return email
 
+# @Todo - move these to their own area - shopping_list/forms.py
+
 
 class ShoppingListForm(forms.ModelForm):
     class Meta:
         model = ShoppingList
         fields = ['name']
+
+# @Todo - move these to their own folder - ShoppingApp/shopping_list_item/forms.py
 
 
 class ShoppingListItemForm(forms.ModelForm):
@@ -43,22 +47,30 @@ class ShoppingListItemForm(forms.ModelForm):
         model = ShoppingListItem
         fields = ['name', 'quantity', 'category']
 
+# @Todo - move these to their own folder - ShoppingApp/shopping_list_item/forms.py
+
 
 class ArchiveListForm(forms.ModelForm):
+    """ To mark a list as archived """
     class Meta:
         model = ShoppingList
         fields = ['archived']
 
+# @Todo - move these to their own folder - ShoppingApp/shopping_list_item/forms.py
+
 
 class CompleteAListItemForm(forms.ModelForm):
+    """ To mark a list item as completed or un-completed """
     # completed = forms.BooleanField(required=False)
     class Meta:
         model = ShoppingListItem
         fields = ['completed']
 
+# @Todo - move these to their own folder - ShoppingApp/shopping_list_item_category/forms.py
+
 
 class ShoppingListItemCategoryForm(forms.ModelForm):
-
+    """ To edit a list item category """
     class Meta:
         model = ShoppingListItemCategory
         fields = ['name']

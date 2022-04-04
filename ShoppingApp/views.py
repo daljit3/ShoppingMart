@@ -5,16 +5,16 @@ from django.contrib.auth.decorators import login_required
 
 from django.db.models import Count
 
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.shortcuts import redirect, render
 
 from django.urls import reverse_lazy
 
 from django.views import View
-from django.views.generic import ListView, UpdateView
+from django.views.generic import ListView, UpdateView, DeleteView
 
 # Load models
-from .models import ShoppingList, ShoppingListItem
+from .models import ShoppingList, ShoppingListItem, ShoppingListItemCategory
 
 # Load forms
 from .forms import SignUpForm, ShoppingListForm, ShoppingListItemCategoryForm, ShoppingListItemForm, CompleteAListItemForm, ArchiveListForm
@@ -63,25 +63,25 @@ class DashboardListView(ListView):
     template_name = "dashboard.html"
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class(initial=self.initial)
+        form_list_item = self.form_class(initial=self.initial)
         # get user's shopping lists along with their total number of items in that list.
         user_lists = ShoppingList.objects.filter(
-            user=self.request.user).annotate(num_of_items=Count('shoppinglistitem'))
+            user=self.request.user).annotate(num_of_items=Count('shoppinglistitem')).order_by('archived', 'name')
 
-        return render(request, self.template_name, {'form': form, 'user_lists': user_lists})
+        return render(request, self.template_name, {'form_list_item': form_list_item, 'user_lists': user_lists})
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
+        form_list_item = self.form_class(request.POST)
+        if form_list_item.is_valid():
             # process form's cleaned data
-            new_list = form.save(commit=False)
+            new_list = form_list_item.save(commit=False)
             new_list.user = self.request.user
             new_list.save()
 
             #created = new_list.id
             return redirect('dashboard')
 
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form_list_item': form_list_item})
 
 
 class ShoppingListItemsView(View):
@@ -89,6 +89,7 @@ class ShoppingListItemsView(View):
     form_class = ShoppingListItemForm
     initial = {}
     template_name = "shopping_list_items.html"
+    ordering = ["name"]
 
     def get(self, request, *args, **kwargs):
         list_id = kwargs['list_id']
@@ -117,7 +118,7 @@ class ShoppingListItemsView(View):
 
         # Get list of items in the requested list
         list_items = ShoppingListItem.objects.select_related(
-            'category').prefetch_related('category').filter(shopping_list=list_id)
+            'category').prefetch_related('category').filter(shopping_list=list_id).order_by("completed", "name")
 
         return render(request, self.template_name, {'form_list_item': form_list_item, 'form_category': form_category, 'shopping_list': shopping_list, 'list_items': list_items})
 
@@ -144,7 +145,6 @@ class ShoppingListItemEditView(UpdateView):
     model = ShoppingListItem
     form_class = ShoppingListItemForm
     template_name = "shopping_item_edit.html"
-    # success_url = reverse_lazy('list_items', kwargs={'list_id':})
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('list_items', kwargs={'list_id': self.object.shopping_list.id})
@@ -152,7 +152,7 @@ class ShoppingListItemEditView(UpdateView):
     """ If user don't own this record, just show 404 """
 
     def get_object(self, queryset=None):
-        obj = super().get_object(queryset)
+        obj = super(ShoppingListItemEditView, self).get_object(queryset)
         if obj.user != self.request.user:
             raise Http404
         return obj
@@ -163,7 +163,39 @@ class ShoppingListItemEditView(UpdateView):
         kwargs.update({'user': self.request.user})
         return kwargs
 
-# http://127.0.0.1:8000/edit_item/18/6
+# @Todo refactor and re-organise category views
+
+
+class CategoriesListView(ListView):
+    """ Once a user log in, they can view their shopping lists """
+    # model = ShoppingListItemCategory
+    template_name = "shopping_list_item_categories.html"
+
+    def get_queryset(self):
+        return ShoppingListItemCategory.objects.filter(user=self.request.user)
+
+    # def get_context_data(self, *args, **kwargs):
+    #    context = super(CategoriesListView, self).get_context_data(*args, **kwargs)
+        # context['data'] = ShoppingListItemCategory.objects.all()
+    #    return context
+
+
+class ShoppingListItemCategoryEditView(UpdateView):
+    model = ShoppingListItemCategory
+    fields = ['name']
+    #form_class = ShoppingListItemCategoryForm
+    # context_object_name = 'category'
+    template_name = "shopping_item_category_edit.html"
+    success_url = reverse_lazy('categories')
+
+
+class CategoryDeleteView(DeleteView):
+    model = ShoppingListItemCategory
+    template_name = "shopping_item_category_delete.html"
+    success_url = reverse_lazy('categories')
+
+    def get_queryset(self):
+        return ShoppingListItemCategory.objects.filter(user=self.request.user)
 
 
 @login_required
@@ -224,6 +256,8 @@ def delete_list_item(request, item_id):
             response_data['message'] = 'Item could not be deleted!'
 
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+    return HttpResponseForbidden()
 
 
 @login_required

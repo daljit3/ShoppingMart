@@ -3,7 +3,7 @@
 {% load django_bootstrap5 %}
 
 <!-- Page title -->
-{% block metaTitle %}Dashboard{% endblock%}
+{% block metaTitle %}Manage List Items{% endblock%}
 
 <!-- main content -->
 {% block bodyContent %}
@@ -19,7 +19,7 @@
     a.edit_item { color:green; }
 </style>
 <div class="container">
-    <a href="{% url 'dashboard' %}">Go back</a>
+    {% include 'partials/user_nav.html' %}
     <div class="row mt-3">
       <div class="col-8">
         <div class="card">
@@ -90,7 +90,12 @@
         </div> <!-- /.card -->
 
         <div class="card mt-3">
-            <h5 class="card-header">Add Category</h5>
+            <div class="card-header">
+                <div class="d-flex justify-content-between">
+                    <h5>Add Category</h5>
+                    <div><a href="{% url 'categories' %}">Manage Categories</a> </div>
+                </div>
+            </div>
             <div class="card-body">
                 <form action="{% url 'save_item_category' shopping_list.id %}" method="post">
                     {% csrf_token %}

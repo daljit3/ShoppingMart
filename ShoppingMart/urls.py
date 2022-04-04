@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from telnetlib import LOGOUT
+
 from django.contrib import admin
 from django.urls import path
 
@@ -36,6 +36,7 @@ urlpatterns = [
          views.mark_list_as_archived, name='archive_list'),
 
     # Shopping List items
+    # @Todo - to refactor and organise views into their own folders - shopping_list_items/urls.py
     path('items/<int:list_id>',
          login_required(views.ShoppingListItemsView.as_view()), name='list_items'),
     path('edit_item/<int:list_id>/<int:pk>',
@@ -46,6 +47,13 @@ urlpatterns = [
          views.delete_list_item, name='delete_item'),
 
     # Item Category
+    # @Todo - to refactor and organise views into their own folders - shopping_list_item_category/urls.py
+    path('categories/', login_required(views.CategoriesListView.as_view()),
+         name='categories'),
+    path('edit_category/<int:pk>', login_required(
+        views.ShoppingListItemCategoryEditView.as_view()), name='edit_category'),
+    path('delete_category/<int:pk>',
+         login_required(views.CategoryDeleteView.as_view()), name='delete_category'),
     path('save_item_category/<int:list_id>',
          views.save_list_item_category, name='save_item_category'),
 ]

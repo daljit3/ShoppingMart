@@ -1,0 +1,35 @@
+{% extends "main_layout.html" %}
+
+<!-- Page title -->
+{% block metaTitle %}Edit Item{% endblock%}
+
+<!-- main content -->
+{% block bodyContent %}
+
+<div class="container">
+    {% include 'partials/user_nav.html' %}
+    <div class="row mt-3">`
+        <div class="col-6 col-md-8 col-sm-12">
+            <div class="card">
+                <h5 class="card-header">Delete</h5>
+                <div class="card-body">
+                    <br />
+                    <br />
+
+                    <form action="" method="post">
+                        {% csrf_token %}
+
+                        <h5>Are you sure you want to delete category "<span style="color:red;">{{ object }}</span>"?</h5>
+                        <br />
+                        <button type="submit" class="btn btn-danger">Confirm & Delete</button>
+                    </form>
+                    <br />
+                    <br />
+                    <br />
+                </div> <!-- /.card-body -->
+            </div> <!-- /.card -->
+        </div>
+    </div>
+</div>
+
+{% endblock %}
